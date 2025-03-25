@@ -1,24 +1,17 @@
 package org.example;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Main {
 
     public static void main(String[] args) {
         int[] arr = {11100, -55050, 84940, 848480, 45, 88, -9874, 67676, 55555, 10, 1, 0, -9};
         int[] arr3 = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
-        bubbleSort(arr3);
-        //sort(arr3);
-        for (int i : arr3) {
-            System.out.print(i + "; ");
+
+        for (int i : filterOdd(arr)) {
+            System.out.printf("%d; ", i);
         }
         System.out.println();
-
-        for (int[] arrayPart : split(arr, 5)) {
-            for (int i : arrayPart) {
-                System.out.print(i + "; ");
-            }
-
-            System.out.println();
-        }
     }
 
     private static int sumArrayEntries(int[] array) {
@@ -91,5 +84,51 @@ public class Main {
         }
 
         System.out.println("Complexity points: " + complexityPoints);
+    }
+
+    private interface IOddLambda {
+        void process(int i);
+    }
+
+    private static void foreachOdd(int[] array, IOddLambda lambda) {
+        for (int i : array) {
+            if (i % 2 != 0)
+                lambda.process(i);
+        }
+    }
+
+    private static int[] filterOdd(int[] array) {
+        AtomicInteger oddCount = new AtomicInteger();
+        foreachOdd(array, (i) -> oddCount.getAndIncrement());
+
+        int[] result = new int[oddCount.get()];
+
+        AtomicInteger j = new AtomicInteger();
+        foreachOdd(array, (i) -> result[j.getAndIncrement()] = i);
+
+        return result;
+    }
+
+    private static int factorial(int n) {
+        if (n == 0)
+            return 1;
+
+        return n * factorial(n - 1);
+    }
+    
+    private static int fibonacci(int n) {
+        if (n == 0)
+            return 0;
+        else if (n == 1)
+            return 1;
+        
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+
+    private static int powerUp(int base, int power) {
+        if (power == 0)
+            return 1;
+
+        return base * powerUp(base, power - 1);
     }
 }
